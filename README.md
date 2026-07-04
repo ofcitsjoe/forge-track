@@ -22,7 +22,7 @@ You **do not** need Python or any programming knowledge to use ForgeTrack.
 
 Download the latest release from the **Releases** page:
 
-> **https://github.com/YOUR_USERNAME/ForgeTrack/releases/latest**
+> **https://github.com/ofcitsjoe/forge-track/releases/latest**
 
 Download **ForgeTrack.exe**.
 
