@@ -1,199 +1,220 @@
 # ForgeTrack
 
-A lightweight, automated Windows application that accurately tracks your PC gaming sessions by monitoring the active foreground window. Unlike launcher-based trackers, ForgeTrack only counts time while you're actually playing.
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Windows-blue)
+![Python](https://img.shields.io/badge/python-3.12+-blue)
+
+A lightweight, privacy-first Windows application that automatically tracks your PC gaming sessions by monitoring the active foreground window. Unlike launcher-based trackers, ForgeTrack only records time while you're actually playing.
 
 ---
 
-## ✨ Features
+## 📋 Table of Contents
 
-- **🎮 Active Window Tracking** – Only records playtime when your game is the active foreground window, preventing inflated playtime from Alt-Tabbing or leaving games idle.
-- **⚡ Low Resource Footprint** – Runs silently in the background with minimal CPU and memory usage.
-- **📝 Whitelist Filtering** – Uses a customizable `config.json` file so only the games you choose are tracked.
-- **💾 Local Storage** – Stores all gaming sessions in a local SQLite database. No internet connection or cloud account required.
-- **🔒 Privacy First** – Your data never leaves your computer.
+1. [About the Project](#-about-the-project)
+2. [Features](#-features)
+3. [Architecture](#-architecture)
+4. [Tech Stack](#-tech-stack)
+5. [Installation](#-installation)
+6. [Usage](#-usage)
+7. [Developer Setup](#-developer-setup)
+8. [Building the Executable](#-building-the-executable)
+9. [Roadmap](#-roadmap)
+10. [Contributing](#-contributing)
+11. [License](#-license)
 
 ---
 
-# 🚀 Download & Usage (Quick Start)
+# 🎯 About the Project
 
-You **do not** need Python or any programming knowledge to use ForgeTrack.
+Most game launchers measure how long a game is open—not how long it's actually being played. This often leads to inflated playtime whenever the game is left idle or minimized.
 
-## 1. Download
+**ForgeTrack** solves this by monitoring the active foreground window and only recording playtime while your game is actually in focus.
 
-Download the latest version from the **Releases** page:
+All tracking is performed locally using native Windows APIs and SQLite. No cloud services, user accounts, or internet connection are required.
+
+**Key highlights:**
+
+- 🎮 Tracks only active gameplay
+- 🔒 100% local with no data collection
+- ⚡ Lightweight background application
+- 💾 Stores sessions in a local SQLite database
+- 📄 Simple JSON configuration
+- 📦 Distributed as a standalone executable
+
+---
+
+# ✨ Features
+
+- 🎮 **Active Window Tracking** — Records playtime only while your game is the active foreground window.
+- ⚡ **Low Resource Usage** — Runs quietly in the background with minimal CPU and memory usage.
+- 📝 **Whitelist Configuration** — Track only the games you choose using `config.json`.
+- 💾 **Local SQLite Storage** — Gaming sessions remain entirely on your computer.
+- 🔒 **Privacy First** — No telemetry, analytics, accounts, or internet connectivity required.
+
+---
+
+# 🏗️ Architecture
+
+```text
+Active Window
+      │
+      ▼
+Windows API
+      │
+      ▼
+Executable Detection
+      │
+      ▼
+Whitelist Filter
+      │
+      ▼
+Session Tracking
+      │
+      ▼
+SQLite Database
+```
+
+*All processing occurs locally. No information is transmitted outside your computer.*
+
+---
+
+# 🛠️ Tech Stack
+
+| Component | Technology |
+|---|---|
+| Language | Python 3.12+ |
+| Platform | Windows |
+| OS Integration | pywin32, psutil |
+| Database | SQLite3 |
+| Packaging | PyInstaller |
+| Formatting & Linting | Ruff |
+
+---
+
+# 🚀 Installation
+
+## Prerequisites
+
+- Windows 10 or later
+- Git (for developers)
+
+---
+
+## Option 1 — Download (Recommended)
+
+Download the latest release from GitHub.
 
 👉 **https://github.com/ofcitsjoe/forge-track/releases/latest**
 
-Download **ForgeTrack.exe**.
+Download:
 
----
+```
+ForgeTrack.exe
+```
 
-## 2. Setup
-
-Create a folder anywhere on your PC, for example:
+Place it inside any folder, for example:
 
 ```text
 Documents/
 └── ForgeTrack/
 ```
 
-Place **ForgeTrack.exe** inside that folder.
+Double-click **ForgeTrack.exe** to start tracking.
 
 ---
 
-## 3. Run
+## Option 2 — Build from Source
 
-Double-click **ForgeTrack.exe**.
+Clone the repository:
 
-The first time it runs, ForgeTrack automatically creates:
+```bash
+git clone https://github.com/ofcitsjoe/forge-track.git
+cd forge-track
+```
 
-```text
-config.json
-data/
-└── tracker.db
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+**PowerShell**
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run:
+
+```bash
+python main.py
 ```
 
 ---
 
-## 4. Configure
+# 📝 Usage
 
-Open `config.json` using Notepad.
+When ForgeTrack starts for the first time, it automatically creates:
+
+```text
+config.json
+
+data/
+└── tracker.db
+```
+
+Open `config.json` and add the executables you want to track.
 
 Example:
 
 ```json
 {
-  "games": ["Hades.exe", "DetroitBecomeHuman.exe", "Stardew Valley.exe"]
+  "games": [
+    "Hades.exe",
+    "DetroitBecomeHuman.exe",
+    "Stardew Valley.exe"
+  ]
 }
 ```
 
-Simply add or remove executable names as needed.
-
----
-
-## 5. Play
-
 Leave ForgeTrack running in the background.
 
-Whenever one of your configured games becomes the active window, ForgeTrack automatically records your play session.
-
-To completely close ForgeTrack, open **Windows Task Manager**, locate **ForgeTrack**, and choose **End Task**.
-
----
-
-## 6. Viewing Your Data
-
-ForgeTrack runs silently in the background, and all of your gaming history is stored locally in the SQLite database.
-
-To view your recorded play sessions:
-
-1. Download the free, open-source **DB Browser for SQLite** from:
-   **https://sqlitebrowser.org/dl/**
-   _(The "Standard installer" is recommended.)_
-
-2. Open **DB Browser for SQLite**.
-
-3. Click **Open Database** in the top-left corner.
-
-4. Navigate to:
-
-```text
-ForgeTrack/
-└── data/
-    └── tracker.db
-```
-
-5. Open `tracker.db`.
-
-6. Click the **Browse Data** tab to view a spreadsheet containing:
+Whenever one of the configured games becomes the active foreground window, the application automatically records:
 
 - Game executable
 - Session start time
 - Session end time
-- Session duration (seconds)
+- Session duration
 
-Everything stays on your computer—nothing is uploaded or shared.
+To stop ForgeTrack completely, open **Task Manager** and end the **ForgeTrack** process.
 
 ---
 
-# 🏗️ Architecture
+## Viewing Your Data
 
-ForgeTrack is built around a simple four-stage pipeline.
-
-## Sensor (`src/os_utils`)
-
-Uses the Windows API to retrieve:
+ForgeTrack stores all sessions inside:
 
 ```text
-HWND
-   ↓
-PID
-   ↓
-Executable (.exe)
+data/
+└── tracker.db
 ```
 
-This determines exactly which application is currently active.
+To inspect the database:
 
----
+1. Install **DB Browser for SQLite**
+2. Open `tracker.db`
+3. Browse the `sessions` table
 
-## Filter (`src/core/config.py`)
-
-Loads your whitelist from `config.json` and ignores everything except the games you've specified.
-
----
-
-## Memory (`src/storage`)
-
-Uses SQLite to permanently store gaming sessions with:
-
-- Context Managers
-- Parameterized SQL Queries
-- ACID-compliant persistence
-
----
-
-## Brain (`src/core/loop.py`)
-
-Coordinates the application's core logic by:
-
-- Loading configuration
-- Initializing the database
-- Polling the active window
-- Detecting game switches
-- Calculating session duration
-- Saving completed sessions
-
----
-
-# 🛠 Tech Stack
-
-| Component                | Technology      |
-| ------------------------ | --------------- |
-| **Language**             | Python 3.12+    |
-| **Operating System**     | Windows         |
-| **OS Interfacing**       | pywin32, psutil |
-| **Database**             | SQLite3         |
-| **Packaging**            | PyInstaller     |
-| **Linting & Formatting** | Ruff            |
-
----
-
-# 📁 Folder Structure
-
-```text
-ForgeTrack/
-├── src/
-│   ├── core/              # Main application logic
-│   ├── os_utils/          # Windows API interactions
-│   └── storage/           # SQLite database layer
-├── data/                  # Generated local database
-├── tests/                 # Unit tests
-├── config.json            # User whitelist
-├── main.py                # Application entry point
-├── pyproject.toml         # Ruff configuration
-├── requirements.txt
-└── README.md
-```
+Everything remains stored locally on your computer.
 
 ---
 
@@ -212,7 +233,7 @@ Create a virtual environment:
 python -m venv .venv
 ```
 
-Activate it (PowerShell):
+Activate it:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
@@ -224,7 +245,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run the tracker:
+Run the application:
 
 ```bash
 python main.py
@@ -255,41 +276,37 @@ dist/
 
 ---
 
+# 🔭 Roadmap
+
+- [ ] Dashboard application
+- [ ] Daily, weekly, and monthly statistics
+- [ ] CSV export
+- [ ] Automatic updates
+- [ ] Game artwork and icons
+- [ ] Configurable polling interval
+- [ ] Pause tracking hotkey
+- [ ] Multi-language support
+
+---
+
 # 🤝 Contributing
 
 Contributions are always welcome!
 
-If you'd like to improve ForgeTrack:
-
 1. Fork the repository.
-2. Create a new feature branch.
+2. Create a feature branch.
 3. Commit your changes.
-4. Push the branch.
+4. Push your branch.
 5. Open a Pull Request.
 
 ---
 
 # 📄 License
 
-This project is licensed under the **MIT License**.
-
-Feel free to use, modify, and distribute this software in accordance with the license terms.
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
 <p align="center">
-  Built with ❤️ for gamers who want accurate, launcher-independent playtime tracking.
+Built with ❤️ for gamers who want accurate, launcher-independent playtime tracking.
 </p>
-
-# 📋 Roadmap
-
-Planned features for future releases:
-
-- [ ] Dashboard application for viewing playtime
-- [ ] Daily, weekly, and monthly statistics
-- [ ] Export sessions to CSV
-- [ ] Automatic updates
-- [ ] Game icons and artwork
-- [ ] Custom polling interval
-- [ ] Pause tracking with a hotkey
-- [ ] Multi-language support
