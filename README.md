@@ -18,17 +18,17 @@ A lightweight, automated Windows application that accurately tracks your PC gami
 
 You **do not** need Python or any programming knowledge to use ForgeTrack.
 
-### 1. Download
+## 1. Download
 
-Download the latest release from the **Releases** page:
+Download the latest version from the **Releases** page:
 
-> **https://github.com/ofcitsjoe/forge-track/releases/latest**
+👉 **https://github.com/ofcitsjoe/forge-track/releases/latest**
 
 Download **ForgeTrack.exe**.
 
 ---
 
-### 2. Setup
+## 2. Setup
 
 Create a folder anywhere on your PC, for example:
 
@@ -41,7 +41,7 @@ Place **ForgeTrack.exe** inside that folder.
 
 ---
 
-### 3. Run
+## 3. Run
 
 Double-click **ForgeTrack.exe**.
 
@@ -55,9 +55,9 @@ data/
 
 ---
 
-### 4. Configure
+## 4. Configure
 
-Open `config.json` with Notepad.
+Open `config.json` using Notepad.
 
 Example:
 
@@ -71,11 +71,48 @@ Simply add or remove executable names as needed.
 
 ---
 
-### 5. Play
+## 5. Play
 
 Leave ForgeTrack running in the background.
 
 Whenever one of your configured games becomes the active window, ForgeTrack automatically records your play session.
+
+To completely close ForgeTrack, open **Windows Task Manager**, locate **ForgeTrack**, and choose **End Task**.
+
+---
+
+## 6. Viewing Your Data
+
+ForgeTrack runs silently in the background, and all of your gaming history is stored locally in the SQLite database.
+
+To view your recorded play sessions:
+
+1. Download the free, open-source **DB Browser for SQLite** from:
+   **https://sqlitebrowser.org/dl/**
+   _(The "Standard installer" is recommended.)_
+
+2. Open **DB Browser for SQLite**.
+
+3. Click **Open Database** in the top-left corner.
+
+4. Navigate to:
+
+```text
+ForgeTrack/
+└── data/
+    └── tracker.db
+```
+
+5. Open `tracker.db`.
+
+6. Click the **Browse Data** tab to view a spreadsheet containing:
+
+- Game executable
+- Session start time
+- Session end time
+- Session duration (seconds)
+
+Everything stays on your computer—nothing is uploaded or shared.
 
 ---
 
@@ -83,11 +120,11 @@ Whenever one of your configured games becomes the active window, ForgeTrack auto
 
 ForgeTrack is built around a simple four-stage pipeline.
 
-### Sensor (`src/os_utils`)
+## Sensor (`src/os_utils`)
 
 Uses the Windows API to retrieve:
 
-```
+```text
 HWND
    ↓
 PID
@@ -99,13 +136,13 @@ This determines exactly which application is currently active.
 
 ---
 
-### Filter (`src/core/config.py`)
+## Filter (`src/core/config.py`)
 
 Loads your whitelist from `config.json` and ignores everything except the games you've specified.
 
 ---
 
-### Memory (`src/storage`)
+## Memory (`src/storage`)
 
 Uses SQLite to permanently store gaming sessions with:
 
@@ -115,9 +152,9 @@ Uses SQLite to permanently store gaming sessions with:
 
 ---
 
-### Brain (`src/core/loop.py`)
+## Brain (`src/core/loop.py`)
 
-Coordinates the entire application by:
+Coordinates the application's core logic by:
 
 - Loading configuration
 - Initializing the database
@@ -130,12 +167,14 @@ Coordinates the entire application by:
 
 # 🛠 Tech Stack
 
-- **Language:** Python 3.12+
-- **Operating System:** Windows
-- **OS Interfacing:** `pywin32`, `psutil`
-- **Database:** SQLite3
-- **Packaging:** PyInstaller
-- **Linting & Formatting:** Ruff
+| Component                | Technology      |
+| ------------------------ | --------------- |
+| **Language**             | Python 3.12+    |
+| **Operating System**     | Windows         |
+| **OS Interfacing**       | pywin32, psutil |
+| **Database**             | SQLite3         |
+| **Packaging**            | PyInstaller     |
+| **Linting & Formatting** | Ruff            |
 
 ---
 
@@ -144,13 +183,14 @@ Coordinates the entire application by:
 ```text
 ForgeTrack/
 ├── src/
-│   ├── core/          # Main application loop and configuration manager
-│   ├── os_utils/      # Windows API interactions
-│   └── storage/       # SQLite database layer
-├── data/              # Generated local database
-├── tests/             # Unit tests
-├── config.json        # User whitelist
-├── pyproject.toml     # Ruff configuration
+│   ├── core/              # Main application logic
+│   ├── os_utils/          # Windows API interactions
+│   └── storage/           # SQLite database layer
+├── data/                  # Generated local database
+├── tests/                 # Unit tests
+├── config.json            # User whitelist
+├── main.py                # Application entry point
+├── pyproject.toml         # Ruff configuration
 ├── requirements.txt
 └── README.md
 ```
@@ -163,7 +203,7 @@ Clone the repository:
 
 ```bash
 git clone https://github.com/ofcitsjoe/forge-track.git
-cd ForgeTrack
+cd forge-track
 ```
 
 Create a virtual environment:
@@ -187,7 +227,7 @@ pip install -r requirements.txt
 Run the tracker:
 
 ```bash
-python -m src.core.loop
+python main.py
 ```
 
 ---
@@ -203,37 +243,53 @@ pip install pyinstaller
 Build ForgeTrack:
 
 ```powershell
-pyinstaller --noconsole --onefile src/core/loop.py
+pyinstaller --noconsole --onefile --name ForgeTrack main.py
 ```
 
 The executable will be generated inside:
 
 ```text
 dist/
-└── loop.exe
-```
-
-You may rename it to:
-
-```text
-ForgeTrack.exe
+└── ForgeTrack.exe
 ```
 
 ---
 
 # 🤝 Contributing
 
-Contributions are welcome!
+Contributions are always welcome!
 
 If you'd like to improve ForgeTrack:
 
 1. Fork the repository.
-2. Create a feature branch.
+2. Create a new feature branch.
 3. Commit your changes.
-4. Open a Pull Request.
+4. Push the branch.
+5. Open a Pull Request.
 
 ---
 
 # 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
+
+Feel free to use, modify, and distribute this software in accordance with the license terms.
+
+---
+
+<p align="center">
+  Built with ❤️ for gamers who want accurate, launcher-independent playtime tracking.
+</p>
+
+# 📋 Roadmap
+
+Planned features for future releases:
+
+- [ ] Dashboard application for viewing playtime
+- [ ] Daily, weekly, and monthly statistics
+- [ ] Export sessions to CSV
+- [ ] Automatic updates
+- [ ] Game icons and artwork
+- [ ] Custom polling interval
+- [ ] Pause tracking with a hotkey
+- [ ] Multi-language support
