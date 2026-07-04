@@ -162,7 +162,7 @@ ForgeTrack/
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ForgeTrack.git
+git clone https://github.com/ofcitsjoe/forge-track.git
 cd ForgeTrack
 ```
 
