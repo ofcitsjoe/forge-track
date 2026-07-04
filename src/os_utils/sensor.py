@@ -1,6 +1,7 @@
+import psutil
 import win32gui
 import win32process
-import psutil
+
 
 def get_active_window_info():
     """
