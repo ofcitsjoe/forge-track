@@ -5,21 +5,22 @@ from pathlib import Path
 DB_PATH = Path("data/tracker.db")
 
 def initialize_db():
-    """creates the database file and sessions table if they don't exist"""
-
+    """Creates the database file and the sessions table if they don't already exist."""
+    
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
-
+        
         cursor.execute('''
-                       CREATE TABLE IF NOT EXISTS sessions (
-                           id INTEGER PRIMARY KEY AUTOINCREMENT,
-                           application TEXT NOT NULL,
-                           start_time REAL NOT NULL,
-                           end_time REAL NOT NULL,
-                           duration_seconds REAL NOT NULL
-                )
+            CREATE TABLE IF NOT EXISTS sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                app_name TEXT NOT NULL,
+                start_time REAL NOT NULL,
+                end_time REAL NOT NULL,
+                duration_seconds REAL NOT NULL
+            )
         ''')
-
         conn.commit()
         print("Database initialized successfully.")
 
