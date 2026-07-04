@@ -7,6 +7,10 @@ A lightweight, automated system monitoring agent for tracking PC gaming sessions
 - **Active Window Tracking:** Only tracks time when the game is the foreground window (fixes the "Alt-Tab" inflated playtime issue).
 - **Low Resource Footprint:** Designed to run silently in the background with near-zero CPU usage.
 
+* **Active Window Tracking:** Only tracks time when the game is the foreground window (fixes the "Alt-Tab" inflated playtime issue).
+* **Low Resource Footprint:** Designed to run silently in the background with near-zero CPU usage.
+* **Whitelist Filtering:** Uses a customizable `config.json` file to guarantee only designated games are tracked, ignoring background apps and system tools.
+
 ## Tech Stack
 
 - **Language:** Python 3.12+
@@ -54,3 +58,10 @@ Currently implemented: Fully Integrated Tracker Pipeline.
 - **The Sensor (`src/os_utils`):** Extracts `HWND` (Window Handle) -> `PID` (Process ID) -> `.exe` (Executable Name).
 - **The Memory (`src/storage`):** An embedded SQLite database that permanently stores gaming sessions, utilizing Context Managers and parameterized queries.
 - **The Brain (`src/core`):** The orchestrator. It bootstraps the database on startup, polls the Sensor every 2 seconds, calculates elapsed time on state transitions, and seamlessly pipelines the data into the Memory layer, including a graceful shutdown trap to catch the final session.
+
+Currently implemented: The Complete Tracking Pipeline.
+
+- **The Sensor (`src/os_utils`):** Extracts `HWND` (Window Handle) -> `PID` (Process ID) -> `.exe` (Executable Name).
+- **The Filter (`src/core/config.py`):** Parses user preferences from a JSON file to isolate target applications.
+- **The Memory (`src/storage`):** An embedded SQLite database that permanently stores gaming sessions.
+- **The Brain (`src/core/loop.py`):** The orchestrator that integrates the Sensor, Filter, and Memory into a cohesive, fault-tolerant background daemon.
